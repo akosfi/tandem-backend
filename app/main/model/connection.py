@@ -5,6 +5,6 @@ class Connection(db.Model):
     __tablename__ = "connection"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    #user_1_id
-    #user_2_id
+    user_id_1 = db.Column(db.Integer, nullable=False, default=0)
+    user_id_2 = db.Column(db.Integer, nullable=False, default=0)
     date = db.Column(db.DateTime, nullable=False)

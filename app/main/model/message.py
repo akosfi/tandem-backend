@@ -5,7 +5,8 @@ class Message(db.Model):
     __tablename__ = "message"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    #sender id
-    #target id
     sent_at = db.Column(db.DateTime, nullable=False)
     message = db.Column(db.String(1023), nullable=False)
+
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    target_id = db.Column(db.Integer, db.ForeignKey('user.id'))
