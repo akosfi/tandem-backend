@@ -22,11 +22,11 @@ class User(db.Model):
     password_hash = db.Column(db.String(100))
 
 
-    messages = db.relationship('Message', backref='user', lazy=True)
+    #messages = db.relationship('Message', backref='user', lazy=True)
     events = db.relationship('Event', backref='user', lazy=True)
 
-    user_known_language = db.relationship('User', secondary=user_known_language, lazy='subquery', backref=db.backref('language', lazy=True))
-    user_goal_language = db.relationship('User', secondary=user_goal_language, lazy='subquery', backref=db.backref('language', lazy=True))
+    user_known_language = db.relationship('User', secondary=user_known_language)
+    user_goal_language = db.relationship('User', secondary=user_goal_language)
 
 
 

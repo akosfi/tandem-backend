@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from flask_socketio import SocketIO
 
 from .config import config_by_name
 
@@ -16,4 +17,9 @@ def create_app(config_name):
 
     return app
 
+
+def create_socket_app(app): 
+    socketio = SocketIO(app, cors_allowed_origins="*")
+
+    return socketio
     

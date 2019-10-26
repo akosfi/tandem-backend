@@ -19,5 +19,4 @@ class Event(db.Model):
 
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    users = db.relationship('User', secondary=users, lazy='subquery',
-        backref=db.backref('events', lazy=True))
+    users = db.relationship('User', secondary=users)
