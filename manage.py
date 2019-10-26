@@ -4,6 +4,7 @@ import unittest
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_cors import CORS
+from flask import render_template
 
 from app import blueprint
 from app.main import create_app, create_socket_app, db
@@ -20,6 +21,17 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
 migrate = Migrate(app, db)
+
+
+#----
+
+@app.route("/")
+def hello():
+    message = "Hello, World"
+    return "asd"
+
+
+#----
 
 @manager.command
 def run():
