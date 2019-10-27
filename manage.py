@@ -5,10 +5,12 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_cors import CORS
 from flask import render_template
+from flask_socketio import SocketIO
 
 from app import blueprint
 from app.main import create_app, create_socket_app, db
 from app.main.model import user, event, connection, language, message
+from app.main.socket import create_socket_app
 
 app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
 app.register_blueprint(blueprint)
@@ -22,21 +24,11 @@ manager.add_command('db', MigrateCommand)
 
 migrate = Migrate(app, db)
 
-
-#----
-
-@app.route("/")
-def hello():
-    message = "Hello, World"
-    return "asd"
-
-
-#----
+socketio = create_socket_app(app)
 
 @manager.command
 def run():
-    socketapp = create_socket_app(app)
-    socketapp.run(app, host="localhost")
+    socketio.run(app, host="localhost")
 
 @manager.command
 def test():

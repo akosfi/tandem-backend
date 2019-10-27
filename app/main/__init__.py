@@ -19,7 +19,7 @@ def create_app(config_name):
 
 
 def create_socket_app(app): 
-    socketio = SocketIO(app, cors_allowed_origins="*")
+    
 
     return socketio
     
