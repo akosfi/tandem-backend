@@ -1,3 +1,7 @@
+import datetime
+import jwt
+
+from ..config import key
 from .. import db, flask_bcrypt
 
 user_known_language = db.Table('user_known_language',
@@ -28,9 +32,6 @@ class User(db.Model):
     user_known_language = db.relationship('User', secondary=user_known_language)
     user_goal_language = db.relationship('User', secondary=user_goal_language)
 
-
-
-
     @property
     def password(self):
         raise AttributeError('password: write-only field')
@@ -44,3 +45,32 @@ class User(db.Model):
 
     def __repr__(self):
         return "<User '{}'>".format(self.username)
+
+
+    def encode_auth_token(self, user):
+        try:
+            payload = {
+                'user': user
+            }
+            return jwt.encode(
+                payload,
+                key,
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
+
+    @staticmethod  
+    def decode_auth_token(auth_token):
+        try:
+            payload = jwt.decode(auth_token, key)
+            return payload
+            #is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
+            #if is_blacklisted_token:
+            #    return 'Token blacklisted. Please log in again.'
+            #else:
+            #    return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.'
