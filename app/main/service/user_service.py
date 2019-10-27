@@ -32,6 +32,16 @@ def get_all_users():
     return User.query.all()
 
 
+def authenticate_user(data): 
+    user = User.query.filter_by(email=data['email']).first()
+    if not user:
+        return None
+    else: 
+        if user.check_password(data['password']):
+            return user
+        else: 
+            return None
+
 def get_a_user(id):
     return User.query.filter_by(id=id).first()
 
