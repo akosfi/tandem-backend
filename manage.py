@@ -8,7 +8,7 @@ from flask import render_template
 from flask_socketio import SocketIO
 
 from app import blueprint
-from app.main import create_app, create_socket_app, db
+from app.main import create_app, db
 from app.main.model import user, event, connection, language, message
 from app.main.socket import create_socket_app
 

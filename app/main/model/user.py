@@ -21,9 +21,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
-    admin = db.Column(db.Boolean, nullable=False, default=False) #??????
-    username = db.Column(db.String(50), unique=True)
+    full_name = db.Column(db.String(100), unique=True)
     password_hash = db.Column(db.String(100))
+    profile_pic_url = db.Column(db.String(100))
 
 
     #messages = db.relationship('Message', backref='user', lazy=True)
@@ -44,7 +44,7 @@ class User(db.Model):
         return flask_bcrypt.check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return "<User '{}'>".format(self.username)
+        return "<User '{}'>".format(self.id)
 
 
     def encode_auth_token(self, user):

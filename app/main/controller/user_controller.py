@@ -1,4 +1,5 @@
 import jwt
+import json
 
 from flask import request, after_this_request
 from flask_restplus import Resource
@@ -57,20 +58,27 @@ class UserLogin(Resource):
         data = request.json
         user = authenticate_user(data)
 
+        
+
         if not user:
             return create_response_object(401, 'Unauthorized.'), 401
         else: 
-            jwt_auth = user.encode_auth_token('tomi')
-            jwt_user = 'tomi'
+            jwt_user = {
+                'id': str(user.id),
+                'email': user.email,
+                'profile_pic_url': user.profile_pic_url,
+                'full_name': user.full_name
+            }
+            jwt_auth = user.encode_auth_token(jwt_user)
 
             @after_this_request
             def set_jwt_cookies(response):
                 response.set_cookie('jwt_auth', jwt_auth, httponly=True)
-                response.set_cookie('jwt_user', jwt_user, max_age=180000000)
+                response.set_cookie('jwt_user', json.dumps(jwt_user), max_age=180000000)
                 return response
 
 
-            return jwt_user, 200 #!!!
+            return jwt_user, 200
 
 
 

@@ -17,9 +17,4 @@ def create_app(config_name):
 
     return app
 
-
-def create_socket_app(app): 
-    
-
-    return socketio
     

@@ -10,7 +10,7 @@ def save_new_user(data):
     if not user:
         new_user = User(
             email=data['email'],
-            username=data['username'],
+            full_name=data['full_name'],
             password=data['password'],
             registered_on=datetime.datetime.utcnow()
         )
