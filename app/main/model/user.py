@@ -56,7 +56,7 @@ class User(db.Model):
                 payload,
                 key,
                 algorithm='HS256'
-            )
+            ).decode('utf-8')
         except Exception as e:
             return e
 

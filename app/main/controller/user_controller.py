@@ -1,6 +1,6 @@
 import jwt
 
-from flask import request
+from flask import request, after_this_request
 from flask_restplus import Resource
 
 from app.main.model.user import User
@@ -63,7 +63,14 @@ class UserLogin(Resource):
             jwt_auth = user.encode_auth_token('tomi')
             jwt_user = 'tomi'
 
-            return 'user', 200, {'Set-Cookie': f'jwt_auth={jwt_auth}; HttpOnly', 'Set-Cookie': f'jwt_user={jwt_user}; Max-Age=180000000'} #!!!
+            @after_this_request
+            def set_jwt_cookies(response):
+                response.set_cookie('jwt_auth', jwt_auth, httponly=True)
+                response.set_cookie('jwt_user', jwt_user, max_age=180000000)
+                return response
+
+
+            return jwt_user, 200 #!!!
 
 
 
