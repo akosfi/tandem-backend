@@ -7,6 +7,7 @@ from flask_restplus import Resource
 from app.main.model.user import User
 
 from ..util import create_response_object
+
 from ..util.dto import UserDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user, authenticate_user
 from ..service.socket_service import get_active_users_id
@@ -50,6 +51,12 @@ class UserMe(Resource):
             except jwt.InvalidTokenError:
                 return create_response_object(409, 'Invalid token.'), 409
 
+
+
+@api.route('/token')
+class UserToken(Resource):
+    def get(self):
+        print("hi")
 
 
 

@@ -10,6 +10,3 @@ class Message(db.Model):
 
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     target_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    sender = db.relationship("User", foreign_keys="Message.sender_id")
-    target = db.relationship("User", foreign_keys="Message.target_id")

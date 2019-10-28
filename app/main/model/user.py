@@ -26,7 +26,7 @@ class User(db.Model):
     profile_pic_url = db.Column(db.String(100))
 
 
-    #messages = db.relationship('Message', backref='user', lazy=True)
+   # messages = db.relationship('Message', backref='user', lazy=True)
     events = db.relationship('Event', backref='user', lazy=True)
 
     user_known_language = db.relationship('User', secondary=user_known_language)
