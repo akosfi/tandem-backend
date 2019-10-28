@@ -9,6 +9,7 @@ from app.main.model.user import User
 from ..util import create_response_object
 from ..util.dto import UserDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user, authenticate_user
+from ..service.socket_service import get_active_users_id
 from ..config import key
 
 api = UserDto.api
@@ -52,13 +53,19 @@ class UserMe(Resource):
 
 
 
+@api.route('/active')
+class UsersActive(Resource):
+    def get(self):
+        
+        return get_active_users_id(), 200
+
+
+
 @api.route('/login')
 class UserLogin(Resource):
     def post(self):
         data = request.json
         user = authenticate_user(data)
-
-        
 
         if not user:
             return create_response_object(401, 'Unauthorized.'), 401
