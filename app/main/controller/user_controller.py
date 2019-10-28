@@ -10,12 +10,14 @@ from ..util import create_response_object
 
 from ..util.dto import UserDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user, authenticate_user
-from ..service.socket_service import get_active_users_id
+from ..service.socket_service import get_active_users
 from ..config import key
 
 api = UserDto.api
 _user = UserDto.user
 
+
+from functools import wraps 
 
 @api.route('/')
 class UserList(Resource):
@@ -53,18 +55,11 @@ class UserMe(Resource):
 
 
 
-@api.route('/token')
-class UserToken(Resource):
-    def get(self):
-        print("hi")
-
-
-
 @api.route('/active')
 class UsersActive(Resource):
     def get(self):
         
-        return get_active_users_id(), 200
+        return get_active_users(), 200
 
 
 
