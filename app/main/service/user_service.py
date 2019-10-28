@@ -4,6 +4,8 @@ import datetime
 from app.main import db
 from app.main.model.user import User
 
+from ..util import create_response_object
+
 
 def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
@@ -15,17 +17,9 @@ def save_new_user(data):
             registered_on=datetime.datetime.utcnow()
         )
         save_changes(new_user)
-        response_object = {
-            'status': 'success',
-            'message': 'Successfully registered.'
-        }
-        return response_object, 201
+        return create_response_object(201, 'Successfully registered.'), 201
     else:
-        response_object = {
-            'status': 'fail',
-            'message': 'User already exists. Please Log in.',
-        }
-        return response_object, 409
+        return create_response_object(409, 'User already exists. Please Log in.'), 409
 
 
 def get_all_users():

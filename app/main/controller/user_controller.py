@@ -3,11 +3,11 @@ import json
 
 from flask import request, after_this_request
 from flask_restplus import Resource
+from functools import wraps 
 
 from app.main.model.user import User
 
 from ..util import create_response_object
-
 from ..util.dto import UserDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user, authenticate_user
 from ..service.socket_service import get_active_users
@@ -17,7 +17,6 @@ api = UserDto.api
 _user = UserDto.user
 
 
-from functools import wraps 
 
 @api.route('/')
 class UserList(Resource):
