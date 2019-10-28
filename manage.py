@@ -9,7 +9,7 @@ from flask_socketio import SocketIO
 
 from app import blueprint
 from app.main import create_app, db
-from app.main.model import user, event, connection, language, message
+from app.main.model import user, event, connection, language, message, socket_user
 from app.main.socket import create_socket_app
 
 app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')

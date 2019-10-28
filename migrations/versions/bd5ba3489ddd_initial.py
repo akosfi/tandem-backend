@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: 0a9cf49790d2
+Revision ID: bd5ba3489ddd
 Revises: 
-Create Date: 2019-10-28 09:37:25.893529
+Create Date: 2019-10-28 11:05:28.970435
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0a9cf49790d2'
+revision = 'bd5ba3489ddd'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,6 +30,14 @@ def upgrade():
     sa.Column('name', sa.String(length=255), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
+    )
+    op.create_table('socket_user',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('user_db_id', sa.Integer(), nullable=False),
+    sa.Column('user_socket_id', sa.String(length=100), nullable=False),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_db_id'),
+    sa.UniqueConstraint('user_socket_id')
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -97,6 +105,7 @@ def downgrade():
     op.drop_table('message')
     op.drop_table('event')
     op.drop_table('user')
+    op.drop_table('socket_user')
     op.drop_table('language')
     op.drop_table('connection')
     # ### end Alembic commands ###
