@@ -26,13 +26,12 @@ def get_user_by_socket_id(socket_id):
 
 def remove_socket(id):
     SocketUser.query.filter_by(id=id).delete()
+    db.session.commit()
 
 
 def get_active_users(): 
-
-    return SocketUser.query.join(User, User.id == SocketUser.user_db_id).with_entities(User.email, User.full_name, User.id, User.profile_pic_url).all()
-    #return SocketUser.query.with_entities(SocketUser.id, SocketUser.user_db_id, SocketUser.user_socket_id).all()
-
+    return db.session.query(User).join(SocketUser, User.id == SocketUser.user_db_id).all()
+  
 def save_changes(data):
     db.session.add(data)
     db.session.commit()

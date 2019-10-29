@@ -7,7 +7,7 @@ from functools import wraps
 
 from app.main.model.user import User
 
-from ..util import create_response_object
+from ..util import create_response_object, jwt_required
 from ..util.dto import UserDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user, authenticate_user
 from ..service.socket_service import get_active_users
@@ -37,25 +37,18 @@ class UserList(Resource):
 
 @api.route('/me')
 class UserMe(Resource):
+
+
+    @jwt_required
     def get(self):
         jwt_auth_token = request.cookies.get('jwt_auth')
-
-        if not jwt_auth_token:
-            response_object = create_response_object(409, 'No JWT token was provided.')
-            return response_object, 409
-        else: 
-            try:
-                payload = jwt.decode(jwt_auth_token, key)
-                return payload, 200
-            except jwt.ExpiredSignatureError:
-                return create_response_object(409, 'Expired signature.'), 409
-            except jwt.InvalidTokenError:
-                return create_response_object(409, 'Invalid token.'), 409
-
+        payload = jwt.decode(jwt_auth_token, key)
+        return payload, 200
 
 
 @api.route('/active')
 class UsersActive(Resource):
+    @api.marshal_list_with(_user, envelope='users')
     def get(self):
         
         return get_active_users(), 200

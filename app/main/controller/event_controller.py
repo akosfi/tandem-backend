@@ -3,7 +3,7 @@ from flask_restplus import Resource
 
 from app.main.model.event import Event
 
-from ..util import create_response_object
+from ..util import create_response_object, jwt_required
 from ..util.dto import EventDto
 from ..service.event_service import save_new_event, get_all_events, get_an_event
 
@@ -23,10 +23,15 @@ class EventList(Resource):
     @api.response(201, 'Event successfully created.')
     @api.doc('create a new event')
     @api.expect(_event, validate=True)
+    @jwt_required
     def post(self):
         """Creates a new Event """
+
+        jwt_auth_token = request.cookies.get('jwt_auth')
+        payload = jwt.decode(jwt_auth_token, key)
+
         data = request.json
-        return save_new_event(data=data)
+        return save_new_event(data, payload['user']['id'])
 
 
 

@@ -38,6 +38,6 @@ class EventDto:
         'public': fields.Boolean(required=True),
         'location': fields.String(required=True),
         'details': fields.String(required=True),
-        'cover_photo': field.String(required=True),
-        'people_going': field.Integer(required=True)
+        'cover_photo': fields.String(required=True),
+        'people_going': fields.Integer(required=True)
     })
