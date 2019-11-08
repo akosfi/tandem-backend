@@ -3,6 +3,7 @@ import datetime
 
 from app.main import db
 from app.main.model.event import Event
+from app.main.model.user import User
 from ..util import create_response_object
 
 def save_new_event(data, creator_id): 
@@ -36,8 +37,10 @@ def user_join_event(user_id, event_id):
     event = Event.query.filter_by(id=event_id).first()
     user = User.query.filter_by(id=user_id).first()
     
-    event.users.add(user)
+    event.users.append(user)
     db.session.commit() 
+
+    return create_response_object(201, 'Successfully joined event.'), 201
 
 def user_quit_event(user_id, event_id):
     event = Event.query.filter_by(id=event_id).first()

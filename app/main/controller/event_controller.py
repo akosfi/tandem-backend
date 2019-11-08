@@ -8,7 +8,7 @@ from app.main.model.event import Event
 
 from ..util import create_response_object, jwt_required
 from ..util.dto import EventDto
-from ..service.event_service import save_new_event, get_all_events, get_an_event, get_user_created_events, get_user_joined_events
+from ..service.event_service import save_new_event, user_join_event, get_all_events, get_an_event, get_user_created_events, get_user_joined_events
 from ..config import key
 
 api = EventDto.api
@@ -36,6 +36,21 @@ class EventList(Resource):
 
         data = request.json
         return save_new_event(data, payload['user']['id'])
+
+
+
+@api.route('/<id>/join')
+class EventJoin(Resource):
+    @api.doc('Join event')
+    @jwt_required
+    def get(self, id):
+        """Join event"""
+
+        jwt_auth_token = request.cookies.get('jwt_auth')
+        payload = jwt.decode(jwt_auth_token, key)
+
+        return user_join_event(payload['user']['id'], id)
+
 
 @api.route('/user_created')
 class EventUserCreatedList(Resource):
