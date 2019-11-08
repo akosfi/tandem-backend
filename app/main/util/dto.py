@@ -24,7 +24,7 @@ class EventDto:
     api = Namespace('event', description='Event related operations.')
 
     event = api.model('event', {
-        'name': fields.Integer(required=True),
+        'name': fields.String(required=True),
         'date': fields.DateTime(required=True),
         'public': fields.Boolean(required=True),
         'location': fields.String(required=True),
@@ -33,11 +33,12 @@ class EventDto:
     })  
 
     event_detailed = api.model('event_detailed', {
-        'name': fields.Integer(required=True),
+        'name': fields.String(required=True),
         'date': fields.DateTime(required=True),
         'public': fields.Boolean(required=True),
         'location': fields.String(required=True),
         'details': fields.String(required=True),
         'cover_photo': fields.String(required=True),
-        'people_going': fields.Integer(required=True)
+        'people_going': fields.Integer(required=True),
+        'id': fields.Integer()
     })

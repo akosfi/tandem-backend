@@ -1,3 +1,6 @@
+import jwt
+
+
 from flask import request
 from flask_restplus import Resource
 
@@ -5,7 +8,8 @@ from app.main.model.event import Event
 
 from ..util import create_response_object, jwt_required
 from ..util.dto import EventDto
-from ..service.event_service import save_new_event, get_all_events, get_an_event
+from ..service.event_service import save_new_event, get_all_events, get_an_event, get_user_created_events, get_user_joined_events
+from ..config import key
 
 api = EventDto.api
 _event_detailed = EventDto.event_detailed
@@ -32,6 +36,30 @@ class EventList(Resource):
 
         data = request.json
         return save_new_event(data, payload['user']['id'])
+
+@api.route('/user_created')
+class EventUserCreatedList(Resource):
+    @api.doc('list_of_user_created_events')
+    @api.marshal_list_with(_event, envelope='events')
+    @jwt_required
+    def get(self):
+        """List all events"""
+        jwt_auth_token = request.cookies.get('jwt_auth')
+        payload = jwt.decode(jwt_auth_token, key)
+          
+        return get_user_created_events(payload['user']['id'])
+
+@api.route('/user_joined')
+class EventUserCreatedList(Resource):
+    @api.doc('list_of_user_joined_events')
+    @api.marshal_list_with(_event, envelope='events')
+    @jwt_required
+    def get(self):
+        """List all events"""
+        jwt_auth_token = request.cookies.get('jwt_auth')
+        payload = jwt.decode(jwt_auth_token, key)
+          
+        return get_user_joined_events(payload['user']['id'])
 
 
 

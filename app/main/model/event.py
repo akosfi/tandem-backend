@@ -9,6 +9,7 @@ class Event(db.Model):
     """ Event Model for storing event related details """
     __tablename__ = "event"
 
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), unique=True, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
@@ -20,3 +21,14 @@ class Event(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     users = db.relationship('User', secondary=users)
+
+
+    def toDTO(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'date': 'fix this!!!!!',
+            'public': self.public,
+            'location': self.location,
+            'details': self.details,
+        }

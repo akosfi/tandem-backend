@@ -6,10 +6,11 @@ from functools import wraps
 from ..config import key
 
 
-def create_response_object(status, message): 
+def create_response_object(status, message, data = None): 
     mock = {
         'status': status,
         'message': message,
+        'data': data,
     }
     return mock
 

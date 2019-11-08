@@ -11,6 +11,7 @@ from app import blueprint
 from app.main import create_app, db
 from app.main.model import user, event, connection, language, message, socket_user
 from app.main.socket import create_socket_app
+from app.main.util.seed import seed_languages 
 
 app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
 app.register_blueprint(blueprint)
@@ -29,6 +30,11 @@ socketio = create_socket_app(app)
 @manager.command
 def run():
     socketio.run(app, host="localhost")
+
+@manager.command
+def seed():
+    seed_languages()
+    return 
 
 @manager.command
 def test():
