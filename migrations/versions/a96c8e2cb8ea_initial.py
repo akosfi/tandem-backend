@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: 9404ea97dd43
+Revision ID: a96c8e2cb8ea
 Revises: 
-Create Date: 2019-11-10 10:16:06.581069
+Create Date: 2019-11-10 12:31:12.485172
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9404ea97dd43'
+revision = 'a96c8e2cb8ea'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -31,6 +31,12 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
+    op.create_table('learning_goal',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('name', sa.String(length=255), nullable=False),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
+    )
     op.create_table('socket_user',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('user_db_id', sa.Integer(), nullable=False),
@@ -38,6 +44,12 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('user_db_id'),
     sa.UniqueConstraint('user_socket_id')
+    )
+    op.create_table('topic',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('name', sa.String(length=255), nullable=False),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -106,7 +118,9 @@ def downgrade():
     op.drop_table('message')
     op.drop_table('event')
     op.drop_table('user')
+    op.drop_table('topic')
     op.drop_table('socket_user')
+    op.drop_table('learning_goal')
     op.drop_table('language')
     op.drop_table('connection')
     # ### end Alembic commands ###

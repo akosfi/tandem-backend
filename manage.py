@@ -9,9 +9,9 @@ from flask_socketio import SocketIO
 
 from app import blueprint
 from app.main import create_app, db
-from app.main.model import user, event, connection, language, message, socket_user
+from app.main.model import user, event, connection, language, topic, learning_goal, message, socket_user
 from app.main.socket import create_socket_app
-from app.main.util.seed import seed_languages 
+from app.main.util.seed import seed_languages, seed_learning_goals, seed_topics
 
 app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
 app.register_blueprint(blueprint)
@@ -34,6 +34,8 @@ def run():
 @manager.command
 def seed():
     seed_languages()
+    seed_learning_goals()
+    seed_topics()
     return 
 
 @manager.command
@@ -47,17 +49,3 @@ def test():
 
 if __name__ == '__main__':
     manager.run()
-
-
-
-
-
-#//////////////////////////////////////
-"""@app.after_request
-def after_request(response):
-  response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-  response.headers.add('Access-Control-Allow-Credentials', 'true')
-  return response"""
-#//////////////////////////////////////

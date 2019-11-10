@@ -43,3 +43,21 @@ class EventDto:
         'people_going': fields.Integer(required=True),
         'id': fields.Integer()
     })
+
+class StaticDto:
+    api = Namespace('static', description='static lists')
+    
+    language = api.model('language', {
+        'name': fields.String(required=True, description='language name'),
+        'id': fields.String(description='language id'),
+    })
+
+    topic = api.model('topic', {
+        'name': fields.String(required=True, description='topic name'),
+        'id': fields.String(description='topic id'),
+    })
+
+    learning_goal = api.model('learning_goal', {
+        'name': fields.String(required=True, description='learning goal name'),
+        'id': fields.String(description='learning_goal id'),
+    })
