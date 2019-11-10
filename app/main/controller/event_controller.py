@@ -1,6 +1,5 @@
 import jwt
 
-
 from flask import request
 from flask_restplus import Resource
 
@@ -8,7 +7,7 @@ from app.main.model.event import Event
 
 from ..util import create_response_object, jwt_required
 from ..util.dto import EventDto
-from ..service.event_service import save_new_event, user_join_event, get_all_events, get_an_event, get_user_created_events, get_user_joined_events
+from ..service.event_service import save_new_event, user_join_event, get_all_events, get_an_event_detailed, get_user_created_events, get_user_joined_events
 from ..config import key
 
 api = EventDto.api
@@ -86,7 +85,7 @@ class EventEntity(Resource):
     @api.marshal_with(_event_detailed)
     def get(self, id):
         """get an event given its identifier"""
-        event = get_an_event(id)
+        event = get_an_event_detailed(id)
         if not event:
             api.abort(404)
         else:

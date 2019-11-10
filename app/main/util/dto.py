@@ -7,7 +7,8 @@ class UserDto:
         'email': fields.String(required=True, description='user email address'),
         'full_name': fields.String(required=True, description='user full name'),
         'password': fields.String(required=True, description='user password'),
-        'id': fields.String(description='user Identifier')
+        'id': fields.String(description='user Identifier'),
+        'registration_finished': fields.Boolean(description='user registration status'),
     })
 
 

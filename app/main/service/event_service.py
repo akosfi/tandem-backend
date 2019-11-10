@@ -20,8 +20,14 @@ def save_new_event(data, creator_id):
     return create_response_object(201, 'Successfully created.', new_event.toDTO()), 201
 
 
-def get_an_event(id): 
-    return Event.query.filter_by(id=id).first()
+def get_an_event_detailed(id): 
+    event = Event.query.filter_by(id=id).first().toDTO()
+
+    people_going = Event.query.filter(Event.users.sum(event_id=id)).all()
+
+    event['people_going'] = people_going
+
+    return event;
 
 def get_all_events():
     return Event.query.all()

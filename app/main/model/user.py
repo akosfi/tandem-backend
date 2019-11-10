@@ -24,7 +24,7 @@ class User(db.Model):
     full_name = db.Column(db.String(100), unique=True)
     password_hash = db.Column(db.String(100))
     profile_pic_url = db.Column(db.String(100))
-
+    registration_finished = db.Column(db.Boolean)
 
    # messages = db.relationship('Message', backref='user', lazy=True)
     events = db.relationship('Event', backref='user', lazy=True)

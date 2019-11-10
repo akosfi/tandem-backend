@@ -1,4 +1,5 @@
 from .. import db
+from datetime import date
 
 users = db.Table('user_joined_event',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
@@ -27,8 +28,9 @@ class Event(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'date': 'fix this!!!!!',
+            'date': date.today(),
             'public': self.public,
             'location': self.location,
             'details': self.details,
+            'cover_photo': self.cover_photo
         }
