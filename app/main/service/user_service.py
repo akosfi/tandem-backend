@@ -6,6 +6,7 @@ from flask import after_this_request
 
 from app.main import db
 from app.main.model.user import User
+from app.main.model.language import Language
 
 from ..util import create_response_object
 
@@ -68,3 +69,29 @@ def set_user_cookies(user):
         return response
 
     return jwt_user
+
+
+
+def set_user_preferences(id, data): 
+    user = User.query.filter_by(id=id).first()
+
+    for language in data['nativeLanguages']:
+        language = Language.query.filter_by(id=language['id']).first()
+        user.user_native_languages.append(language)
+
+    for language in data['fluentLanguages']:
+        language = Language.query.filter_by(id=language['id']).first()
+        user.user_known_languages.append(language)
+
+    for language in data['goalLanguages']:
+        language = Language.query.filter_by(id=language['id']).first()
+        user.user_goal_languages.append(language)
+
+    
+    user.registration_finished = True
+    db.session.commit()     
+
+    jwt_user = set_user_cookies(user)
+    return jwt_user, 200
+
+    

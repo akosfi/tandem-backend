@@ -9,7 +9,7 @@ from app.main.model.user import User
 
 from ..util import create_response_object, jwt_required
 from ..util.dto import UserDto
-from ..service.user_service import save_new_user, get_all_users, get_a_user, authenticate_user, set_user_cookies
+from ..service.user_service import save_new_user, set_user_preferences, get_all_users, get_a_user, authenticate_user, set_user_cookies
 from ..service.socket_service import get_active_users
 from ..config import key
 
@@ -38,7 +38,6 @@ class UserList(Resource):
 @api.route('/me')
 class UserMe(Resource):
 
-
     @jwt_required
     def get(self):
         jwt_auth_token = request.cookies.get('jwt_auth')
@@ -64,10 +63,22 @@ class UserLogin(Resource):
         if not user:
             return create_response_object(401, 'Unauthorized.'), 401
         else: 
-
             jwt_user = set_user_cookies(user)
-
             return jwt_user, 200
+
+
+@api.route('/preferences')
+class UserPreferences(Resource):
+
+    @jwt_required
+    def post(self):
+        data = request.json
+        
+        jwt_auth_token = request.cookies.get('jwt_auth')
+        payload = jwt.decode(jwt_auth_token, key)
+
+        return set_user_preferences(payload['user']['id'], data)
+
 
 @api.route('/<id>')
 @api.param('id', 'The User identifier')

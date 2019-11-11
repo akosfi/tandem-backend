@@ -22,7 +22,7 @@ class LanguageList(Resource):
 @api.route('/learning_goals')
 class LanguageList(Resource):
     @api.doc('list_of_learning_goals')
-    @api.marshal_list_with(_learning_goal, envelope='learning_goal')
+    @api.marshal_list_with(_learning_goal, envelope='learning_goals')
     def get(self):
         """List all learning_goals"""
         return get_all_learning_goals()

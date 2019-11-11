@@ -4,6 +4,12 @@ import jwt
 from ..config import key
 from .. import db, flask_bcrypt
 
+
+user_native_language = db.Table('user_native_language',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('language_id', db.Integer, db.ForeignKey('language.id'), primary_key=True)
+)
+
 user_known_language = db.Table('user_known_language',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('language_id', db.Integer, db.ForeignKey('language.id'), primary_key=True)
@@ -29,8 +35,9 @@ class User(db.Model):
    # messages = db.relationship('Message', backref='user', lazy=True)
     events = db.relationship('Event', backref='user', lazy=True)
 
-    user_known_language = db.relationship('User', secondary=user_known_language)
-    user_goal_language = db.relationship('User', secondary=user_goal_language)
+    user_native_languages = db.relationship('Language', secondary=user_native_language)
+    user_known_languages = db.relationship('Language', secondary=user_known_language)
+    user_goal_languages = db.relationship('Language', secondary=user_goal_language)
 
     @property
     def password(self):
