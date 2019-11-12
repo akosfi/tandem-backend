@@ -1,15 +1,11 @@
-from .. import db
 from datetime import date
 
-user_joined_events = db.Table('user_joined_event',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True)
-)
+from .. import db
+from ._association_tables import user_joined_events
 
 class Event(db.Model):
     """ Event Model for storing event related details """
     __tablename__ = "event"
-
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), unique=True, nullable=False)

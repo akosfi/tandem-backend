@@ -7,21 +7,9 @@ from ..config import key
 from .. import db, flask_bcrypt
 
 from ..model.event import user_joined_events
+from ._association_tables import user_goal_language, user_known_language, user_native_language
 
-user_native_language = db.Table('user_native_language',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('language_id', db.Integer, db.ForeignKey('language.id'), primary_key=True)
-)
-
-user_known_language = db.Table('user_known_language',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('language_id', db.Integer, db.ForeignKey('language.id'), primary_key=True)
-)
-
-user_goal_language = db.Table('user_goal_language',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('language_id', db.Integer, db.ForeignKey('language.id'), primary_key=True)
-) 
+#connection table TODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODO
 
 class AuthType(str, Enum):
     PASSWORD: str = "PASSWORD"
@@ -43,7 +31,7 @@ class User(db.Model):
     access_token = db.Column(db.String(255))
 
 
-   # messages = db.relationship('Message', backref='user', lazy=True)
+    #messages = db.relationship('Message', backref='user', lazy=True)
     #events = db.relationship('Event', backref='user', lazy=True)
     
     events_joined = db.relationship('Event', secondary=user_joined_events, back_populates="users")
@@ -85,11 +73,6 @@ class User(db.Model):
         try:
             payload = jwt.decode(auth_token, key)
             return payload
-            #is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
-            #if is_blacklisted_token:
-            #    return 'Token blacklisted. Please log in again.'
-            #else:
-            #    return payload['sub']
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:

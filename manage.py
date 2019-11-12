@@ -9,7 +9,7 @@ from flask_socketio import SocketIO
 
 from app import blueprint
 from app.main import create_app, db
-from app.main.model import user, event, connection, language, topic, learning_goal, message, socket_user
+from app.main.model import user, event, language, topic, learning_goal, message, socket_user
 from app.main.socket import create_socket_app
 from app.main.util.seed import seed_languages, seed_learning_goals, seed_topics
 

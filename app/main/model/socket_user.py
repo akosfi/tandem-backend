@@ -1,8 +1,7 @@
 from .. import db
 
-
 class SocketUser(db.Model):
-    """ Event Model for storing event related details """
+    """ SocketUser Model for storing socket user related details """
     __tablename__ = "socket_user"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
