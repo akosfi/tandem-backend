@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: 58117214ee5d
+Revision ID: 355d64f1255b
 Revises: 
-Create Date: 2019-11-12 13:57:27.215745
+Create Date: 2019-11-12 15:38:53.965532
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '58117214ee5d'
+revision = '355d64f1255b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -59,9 +59,10 @@ def upgrade():
     sa.Column('password_hash', sa.String(length=100), nullable=True),
     sa.Column('profile_pic_url', sa.String(length=100), nullable=True),
     sa.Column('registration_finished', sa.Boolean(), nullable=True),
+    sa.Column('auth_type', sa.Enum('PASSWORD', 'T_FACEBOOK', 'T_GOOGLE', name='authtype'), nullable=True),
+    sa.Column('access_token', sa.String(length=255), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('full_name')
+    sa.UniqueConstraint('email')
     )
     op.create_table('event',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),

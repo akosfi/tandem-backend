@@ -9,7 +9,7 @@ from app.main.model.user import User
 
 from ..util import create_response_object, jwt_required
 from ..util.dto import UserDto
-from ..service.user_service import save_new_user, set_user_preferences, get_all_users, get_a_user, authenticate_user, set_user_cookies
+from ..service.user_service import save_new_user, set_user_preferences, get_all_users, get_a_user, authenticate_user, authenticate_thirdparty_user ,set_user_cookies
 from ..service.socket_service import get_active_users
 from ..config import key
 
@@ -59,6 +59,19 @@ class UserLogin(Resource):
     def post(self):
         data = request.json
         user = authenticate_user(data)
+
+        if not user:
+            return create_response_object(401, 'Unauthorized.'), 401
+        else: 
+            jwt_user = set_user_cookies(user)
+            return jwt_user, 200
+
+
+@api.route('/third-party')
+class UserThirdPartyLogin(Resource):
+    def post(self):
+        data = request.json
+        user = authenticate_thirdparty_user(data)
 
         if not user:
             return create_response_object(401, 'Unauthorized.'), 401

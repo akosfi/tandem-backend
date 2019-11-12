@@ -1,6 +1,8 @@
 import datetime
 import jwt
 
+from enum import Enum
+
 from ..config import key
 from .. import db, flask_bcrypt
 
@@ -21,6 +23,11 @@ user_goal_language = db.Table('user_goal_language',
     db.Column('language_id', db.Integer, db.ForeignKey('language.id'), primary_key=True)
 ) 
 
+class AuthType(str, Enum):
+    PASSWORD: str = "PASSWORD"
+    T_FACEBOOK: str = "T_FACEBOOK"
+    T_GOOGLE: str = "T_GOOGLE"
+
 class User(db.Model):
     """ User Model for storing user related details """
     __tablename__ = "user"
@@ -28,10 +35,13 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
-    full_name = db.Column(db.String(100), unique=True)
+    full_name = db.Column(db.String(100))
     password_hash = db.Column(db.String(100))
     profile_pic_url = db.Column(db.String(100))
     registration_finished = db.Column(db.Boolean)
+    auth_type = db.Column(db.Enum(AuthType))
+    access_token = db.Column(db.String(255))
+
 
    # messages = db.relationship('Message', backref='user', lazy=True)
     #events = db.relationship('Event', backref='user', lazy=True)

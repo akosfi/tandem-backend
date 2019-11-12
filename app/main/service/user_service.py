@@ -42,6 +42,28 @@ def authenticate_user(data):
         else: 
             return None
 
+
+def authenticate_thirdparty_user(data):
+    user = User \
+            .query \
+            .filter_by(email=data['email'], access_token=data['access_token'], auth_type=data['auth_type']) \
+            .first()
+
+    if not user:
+        new_user = User(
+            email=data['email'],
+            full_name=data['full_name'],
+            access_token=data['access_token'],
+            auth_type=data['auth_type'],
+            registered_on=datetime.datetime.utcnow(),
+            registration_finished=False
+        )
+        save_changes(new_user)
+        return new_user
+    else:
+        return user
+
+
 def get_a_user(id):
     return User.query.filter_by(id=id).first()
 
