@@ -24,3 +24,6 @@ class MessageList(Resource):
         payload = jwt.decode(jwt_auth_token, key)
           
         return get_messages_of_user(payload['user']['id'])
+
+
+    

@@ -4,6 +4,7 @@ import jwt
 from ..config import key
 from .. import db, flask_bcrypt
 
+from ..model.event import user_joined_events
 
 user_native_language = db.Table('user_native_language',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
@@ -33,7 +34,9 @@ class User(db.Model):
     registration_finished = db.Column(db.Boolean)
 
    # messages = db.relationship('Message', backref='user', lazy=True)
-    events = db.relationship('Event', backref='user', lazy=True)
+    #events = db.relationship('Event', backref='user', lazy=True)
+    
+    events_joined = db.relationship('Event', secondary=user_joined_events, back_populates="users")
 
     user_native_languages = db.relationship('Language', secondary=user_native_language)
     user_known_languages = db.relationship('Language', secondary=user_known_language)

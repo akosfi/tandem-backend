@@ -1,3 +1,4 @@
+from flask import send_from_directory
 from flask_restplus import Resource
 
 from ..util.dto import StaticDto

@@ -23,9 +23,9 @@ def save_new_event(data, creator_id):
 def get_an_event_detailed(id): 
     event = Event.query.filter_by(id=id).first().toDTO()
 
-    people_going = Event.query.filter(Event.users.sum(event_id=id)).all()
+    #people_going = Event.query.filter(Event.users.sum(event_id=id)).all()
 
-    event['people_going'] = people_going
+    #event['people_going'] = people_going
 
     return event;
 
@@ -36,7 +36,8 @@ def get_user_created_events(user_id):
     return Event.query.filter_by(creator_id=user_id).all()
 
 def get_user_joined_events(user_id):
-    return Event.query.join(Event.users).filter_by(user_id=user_id).all()
+    #TODO
+    return Event.query.filter_by(creator_id=user_id).all()
 
 
 def user_join_event(user_id, event_id):

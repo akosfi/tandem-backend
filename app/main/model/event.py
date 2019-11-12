@@ -1,7 +1,7 @@
 from .. import db
 from datetime import date
 
-users = db.Table('user_joined_event',
+user_joined_events = db.Table('user_joined_event',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True)
 )
@@ -21,7 +21,7 @@ class Event(db.Model):
 
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    users = db.relationship('User', secondary=users)
+    users = db.relationship('User', secondary=user_joined_events, back_populates="events_joined")
 
 
     def toDTO(self):
