@@ -17,7 +17,7 @@ def create_app(config_name):
     db.init_app(app)
     flask_bcrypt.init_app(app)
 
-    @app.route('/img/<path:path>')
+    @app.route('/static/img/<path:path>')
     def send_img(path):
         return send_from_directory('static/img', path)
 

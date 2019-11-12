@@ -40,7 +40,7 @@ def create_socket_app(app):
 
         emit('IM', data, room=socket.user_socket_id)
 
-        save_message(data['sender_id'], data['target_id'], data['message'], data['sent_at'])
+        save_message(data['sender_id'], data['target_id'], data['message'], data['sent_at'], data['message_type'])
 
     return socketio
 

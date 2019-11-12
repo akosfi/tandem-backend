@@ -4,12 +4,13 @@ from app.main.model.message import Message
 
 import datetime
 
-def save_message(sender_id, target_id, message, sent_at):
+def save_message(sender_id, target_id, message, sent_at, message_type):
     new_message = Message(
             sender_id=sender_id,
             target_id=target_id,
             message=message,
-            sent_at=datetime.datetime.now()
+            sent_at=datetime.datetime.now(),
+            message_type=message_type
         )
 
     save_changes(new_message)
@@ -23,7 +24,8 @@ def get_messages_of_user(user_id):
             'sender_id': f.sender_id,
             'target_id': f.target_id,
             'message': f.message,
-            'sent_at': f.sent_at.isoformat()
+            'sent_at': f.sent_at.isoformat(),
+            'message_type': f.message_type
         }
         if f.sender_id in messages_response:
             messages_response[f.sender_id].append(message_mock)
