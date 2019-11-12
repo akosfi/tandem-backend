@@ -10,7 +10,7 @@ def save_new_event(data, creator_id):
     new_event = Event(
         name=data['name'],
         public=data['public'],
-        date=datetime.datetime.utcnow(), #TODOTODOTODO
+        date=datetime.datetime.utcnow(),
         cover_photo='asd', #TODOTODOTODO
         location=data['location'],
         details=data['details'],
@@ -21,19 +21,28 @@ def save_new_event(data, creator_id):
 
 
 def get_an_event_detailed(id): 
-    event = Event.query.filter_by(id=id).first().toDTO()
+    event = Event \
+            .query \
+            .filter_by(id=id) \
+            .first() \
+            .toDTO()
 
     #people_going = Event.query.filter(Event.users.sum(event_id=id)).all()
 
     #event['people_going'] = people_going
 
-    return event;
+    return event
 
 def get_all_events():
-    return Event.query.all()
+    return Event \
+            .query \
+            .all()
 
 def get_user_created_events(user_id):
-    return Event.query.filter_by(creator_id=user_id).all()
+    return Event \
+            .query \
+            .filter_by(creator_id=user_id) \
+            .all()
 
 def get_user_joined_events(user_id):
     #TODO
@@ -41,17 +50,31 @@ def get_user_joined_events(user_id):
 
 
 def user_join_event(user_id, event_id):
-    event = Event.query.filter_by(id=event_id).first()
-    user = User.query.filter_by(id=user_id).first()
-    
+    event = Event \
+            .query \
+            .filter_by(id=event_id) \
+            .first()
+
+    user = User \
+            .query \
+            .filter_by(id=user_id) \
+            .first()
+
     event.users.append(user)
     db.session.commit() 
 
     return create_response_object(201, 'Successfully joined event.'), 201
 
 def user_quit_event(user_id, event_id):
-    event = Event.query.filter_by(id=event_id).first()
-    user = User.query.filter_by(id=user_id).first()
+    event = Event \
+            .query \
+            .filter_by(id=event_id) \
+            .first()
+
+    user = User \
+            .query \
+            .filter_by(id=user_id) \
+            .first()
     
     event.users.remove(user)
     db.session.commit() 

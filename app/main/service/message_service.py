@@ -16,7 +16,11 @@ def save_message(sender_id, target_id, message, sent_at, message_type):
     save_changes(new_message)
 
 def get_messages_of_user(user_id):
-    messages = Message.query.filter((Message.sender_id == user_id) | (Message.target_id == user_id)).all()
+    messages = Message \
+                .query \
+                .filter((Message.sender_id == user_id) | (Message.target_id == user_id)) \
+                .all()
+    
     messages_response = {};
 
     for f in messages: 

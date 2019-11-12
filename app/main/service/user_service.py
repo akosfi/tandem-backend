@@ -12,7 +12,11 @@ from ..util import create_response_object
 
 
 def save_new_user(data):
-    user = User.query.filter_by(email=data['email']).first()
+    user = User \
+            .query \
+            .filter_by(email=data['email']) \
+            .first()
+    
     if not user:
         new_user = User(
             email=data['email'],
@@ -29,11 +33,17 @@ def save_new_user(data):
 
 
 def get_all_users():
-    return User.query.all()
+    return User \
+            .query \
+            .all()
 
 
 def authenticate_user(data): 
-    user = User.query.filter_by(email=data['email']).first()
+    user = User \
+            .query \
+            .filter_by(email=data['email']) \
+            .first()
+
     if not user:
         return None
     else: 
@@ -66,7 +76,10 @@ def authenticate_thirdparty_user(data):
 
 
 def get_a_user(id):
-    return User.query.filter_by(id=id).first()
+    return User \
+            .query \
+            .filter_by(id=id) \
+            .first()
 
 
 def save_changes(data):
@@ -96,7 +109,10 @@ def set_user_cookies(user):
 
 
 def set_user_preferences(id, data): 
-    user = User.query.filter_by(id=id).first()
+    user = User \
+            .query \
+            .filter_by(id=id) \
+            .first()
 
     for language in data['nativeLanguages']:
         language = Language.query.filter_by(id=language['id']).first()
