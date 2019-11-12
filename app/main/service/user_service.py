@@ -46,8 +46,9 @@ def authenticate_user(data):
 def authenticate_thirdparty_user(data):
     user = User \
             .query \
-            .filter_by(email=data['email'], access_token=data['access_token'], auth_type=data['auth_type']) \
+            .filter_by(email=data['email'], auth_type=data['auth_type']) \
             .first()
+
 
     if not user:
         new_user = User(

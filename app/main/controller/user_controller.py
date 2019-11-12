@@ -1,11 +1,13 @@
 import jwt
 import json
+import requests
+import re
 
-from flask import request, after_this_request
+from flask import request, after_this_request, jsonify
 from flask_restplus import Resource
 from functools import wraps 
 
-from app.main.model.user import User
+from app.main.model.user import User, AuthType
 
 from ..util import create_response_object, jwt_required
 from ..util.dto import UserDto
@@ -69,8 +71,30 @@ class UserLogin(Resource):
 
 @api.route('/third-party')
 class UserThirdPartyLogin(Resource):
+    
     def post(self):
         data = request.json
+
+        if data['auth_type'] == AuthType.T_FACEBOOK:
+            url='https://graph.facebook.com/v2.3/me'
+            params = {'access_token': data['access_token'], 'fields': 'name,email,picture'}
+
+            response = requests.get(url, params).json()
+
+            data['full_name'] = response['name']
+            data['email'] = response['email']
+
+        else: 
+            url = 'https://www.googleapis.com/oauth2/v3/userinfo'
+            params = {'access_token': data['access_token'], 'alt': 'json'}
+
+            response = requests.get(url, params).json()
+
+            print(response.get('name'))
+
+            data['full_name'] = response['name']
+            data['email'] = response['email']
+        
         user = authenticate_thirdparty_user(data)
 
         if not user:
@@ -78,7 +102,7 @@ class UserThirdPartyLogin(Resource):
         else: 
             jwt_user = set_user_cookies(user)
             return jwt_user, 200
-
+    
 
 @api.route('/preferences')
 class UserPreferences(Resource):
