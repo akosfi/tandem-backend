@@ -29,7 +29,7 @@ socketio = create_socket_app(app)
 
 @manager.command
 def run():
-    socketio.run(app)
+    socketio.run(app, host="https://tandem-bme.herokuapp.com", port="80")
 
 @manager.command
 def seed():
