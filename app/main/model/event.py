@@ -1,4 +1,4 @@
-from datetime import date
+import datetime
 
 from .. import db
 from ._association_tables import user_joined_events
@@ -24,7 +24,7 @@ class Event(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'date': date.today(),
+            #'date': datetime.datetime.utcnow(), #!!!!!!!!!!!!!!!!!!
             'public': self.public,
             'location': self.location,
             'details': self.details,

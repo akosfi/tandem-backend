@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 from app.main.model.message import Message
 
-from ..util import jwt_required, create_response_object
+from ..util import jwt_required, create_response_object, get_unique_filename, allowed_file
 from ..util.dto import MessageDto
 from ..config import key, basedir
 from ..service.message_service import get_messages_of_user
@@ -17,18 +17,6 @@ api = MessageDto.api
 _message = MessageDto.message
 
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def get_unique_filename(filename):
-    
-    generated = str(uuid.uuid4()) 
-    extension = filename.rsplit('.', 1)[1].lower()
-
-    return '.'.join([generated, extension]) 
 
 
 @api.route('/')

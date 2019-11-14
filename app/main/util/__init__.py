@@ -1,4 +1,5 @@
 import jwt
+import uuid
 
 from flask import request
 from functools import wraps 
@@ -34,3 +35,18 @@ def jwt_required(f):
 
         return f(*args, **kwargs)
     return decorated
+
+
+def get_unique_filename(filename):
+    
+    generated = str(uuid.uuid4()) 
+    extension = filename.rsplit('.', 1)[1].lower()
+
+    return '.'.join([generated, extension]) 
+
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

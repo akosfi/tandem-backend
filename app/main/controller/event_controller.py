@@ -2,10 +2,11 @@ import jwt
 
 from flask import request
 from flask_restplus import Resource
+from werkzeug.utils import secure_filename
 
 from app.main.model.event import Event
 
-from ..util import create_response_object, jwt_required
+from ..util import create_response_object, jwt_required, get_unique_filename, allowed_file
 from ..util.dto import EventDto
 from ..service.event_service import save_new_event, user_join_event, get_all_events, get_an_event_detailed, get_user_created_events, get_user_joined_events
 from ..config import key
@@ -34,6 +35,11 @@ class EventList(Resource):
         payload = jwt.decode(jwt_auth_token, key)
 
         data = request.json
+
+        #file = request.files['cover_photo']
+        #print("AAAAAAAAAAAAAAAA")
+        #print(file.filename)
+
         return save_new_event(data, payload['user']['id'])
 
 
@@ -64,7 +70,7 @@ class EventUserCreatedList(Resource):
         return get_user_created_events(payload['user']['id'])
 
 @api.route('/user_joined')
-class EventUserCreatedList(Resource):
+class EventUserJoinedList(Resource):
     @api.doc('list_of_user_joined_events')
     @api.marshal_list_with(_event, envelope='events')
     @jwt_required
