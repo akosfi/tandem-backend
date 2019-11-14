@@ -29,7 +29,7 @@ socketio = create_socket_app(app)
 
 @manager.command
 def run():
-    socketio.run(app, host="localhost")
+    socketio.run(app)
 
 @manager.command
 def seed():
