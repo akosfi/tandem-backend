@@ -21,9 +21,9 @@ def save_new_socket(db_id, socket_id):
         save_changes(new_socket)
 
 def get_user_by_db_id(db_id):
-    return User \
+    return Socket \
             .query \
-            .filter_by(id=db_id) \
+            .filter_by(user_db_id=db_id) \
             .first()
 
 def get_user_by_socket_id(socket_id):

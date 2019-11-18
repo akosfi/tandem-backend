@@ -29,7 +29,6 @@ def create_socket_app(app):
 
     @socketio.on('IDENTIFY')
     def identify(data):
-        #print(f'IDENTIFY {request.sid} data: {data}')
         save_new_socket(data, request.sid)
 
 
