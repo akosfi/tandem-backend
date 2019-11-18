@@ -43,7 +43,7 @@ class MessageImage(Resource):
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             unique_filename = get_unique_filename(filename)
-            file.save(os.path.join(basedir, 'static/img', unique_filename))
+            file.save(os.path.join(basedir, 'public/img', unique_filename))
             return create_response_object(200, 'File uploaded succesfully.', unique_filename), 200
 
 
