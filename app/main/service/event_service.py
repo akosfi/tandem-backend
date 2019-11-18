@@ -24,16 +24,26 @@ def get_an_event_detailed(id, user_id):
     event = Event \
             .query \
             .filter_by(id=id) \
-            .first() \
-            .toDTO()
+            .first()
 
+    people_going = len(Event.query.filter_by(id=id).first().users)
+    
+    user_joined_events = User \
+                            .query \
+                            .filter_by(id=user_id) \
+                            .first() \
+                            .events_joined
+    
+    user_joined = False
 
-    user_joined = Event.query.filter_by(id=id).filter(Event.users.any(id=user_id)).first()
-
-    if user_joined:
-        event['user_joined']=True
+    if event in user_joined_events:
+        user_joined=True
     else: 
-        event['user_joined']=False
+        user_joined=False
+    
+    event = event.toDTO()
+    event['people_going']=people_going
+    event['user_joined']=user_joined
 
     return event
 
