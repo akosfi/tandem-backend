@@ -21,7 +21,7 @@ def save_new_socket(db_id, socket_id):
         save_changes(new_socket)
 
 def get_user_by_db_id(db_id):
-    return Socket \
+    return SocketUser \
             .query \
             .filter_by(user_db_id=db_id) \
             .first()

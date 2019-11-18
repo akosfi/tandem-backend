@@ -37,7 +37,8 @@ def create_socket_app(app):
         recipient_id = data['target_id']
         socket = get_user_by_db_id(recipient_id)
 
-        emit('IM', data, room=socket.user_socket_id)
+        if socket:
+            emit('IM', data, room=socket.user_socket_id)
 
         save_message(data['sender_id'], data['target_id'], data['message'], data['sent_at'], data['message_type'])
 
