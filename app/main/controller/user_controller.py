@@ -77,12 +77,14 @@ class UserThirdPartyLogin(Resource):
 
         if data['auth_type'] == AuthType.T_FACEBOOK:
             url='https://graph.facebook.com/v2.3/me'
-            params = {'access_token': data['access_token'], 'fields': 'name,email,picture'}
+            params = {'access_token': data['access_token'], 'fields': 'name,email,picture.width(800).height(800)'}
 
             response = requests.get(url, params).json()
 
             data['full_name'] = response['name']
             data['email'] = response['email']
+            
+            data['profile_pic_url'] = response['picture']['data']['url']
 
         else: 
             url = 'https://www.googleapis.com/oauth2/v3/userinfo'
@@ -90,10 +92,9 @@ class UserThirdPartyLogin(Resource):
 
             response = requests.get(url, params).json()
 
-            print(response.get('name'))
-
             data['full_name'] = response['name']
             data['email'] = response['email']
+            data['profile_pic_url'] = response['picture']
         
         user = authenticate_thirdparty_user(data)
 

@@ -67,7 +67,8 @@ def authenticate_thirdparty_user(data):
             access_token=data['access_token'],
             auth_type=data['auth_type'],
             registered_on=datetime.datetime.utcnow(),
-            registration_finished=False
+            registration_finished=False,
+            profile_pic_url=data['profile_pic_url']
         )
         save_changes(new_user)
         return new_user
