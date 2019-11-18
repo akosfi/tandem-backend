@@ -20,16 +20,20 @@ def save_new_event(data, creator_id):
     return create_response_object(201, 'Successfully created.', new_event.toDTO()), 201
 
 
-def get_an_event_detailed(id): 
+def get_an_event_detailed(id, user_id): 
     event = Event \
             .query \
             .filter_by(id=id) \
             .first() \
             .toDTO()
 
-    #people_going = Event.query.filter(Event.users.sum(event_id=id)).all()
 
-    #event['people_going'] = people_going
+    user_joined = Event.query.filter_by(id=id).filter(Event.users.any(id=user_id)).first()
+
+    if user_joined:
+        event['user_joined']=True
+    else: 
+        event['user_joined']=False
 
     return event
 
@@ -65,7 +69,7 @@ def user_join_event(user_id, event_id):
 
     return create_response_object(201, 'Successfully joined event.'), 201
 
-def user_quit_event(user_id, event_id):
+def user_leave_event(user_id, event_id):
     event = Event \
             .query \
             .filter_by(id=event_id) \
@@ -76,8 +80,14 @@ def user_quit_event(user_id, event_id):
             .filter_by(id=user_id) \
             .first()
     
+    print(event)
+    print(user)
+
     event.users.remove(user)
     db.session.commit() 
+
+
+    return create_response_object(201, 'Successfully left event.'), 201
 
 def save_changes(data):
     db.session.add(data)

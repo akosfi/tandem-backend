@@ -8,7 +8,7 @@ from app.main.model.event import Event
 
 from ..util import create_response_object, jwt_required, get_unique_filename, allowed_file
 from ..util.dto import EventDto
-from ..service.event_service import save_new_event, user_join_event, get_all_events, get_an_event_detailed, get_user_created_events, get_user_joined_events
+from ..service.event_service import save_new_event, user_leave_event, user_join_event, get_all_events, get_an_event_detailed, get_user_created_events, get_user_joined_events
 from ..config import key
 
 api = EventDto.api
@@ -57,6 +57,19 @@ class EventJoin(Resource):
         return user_join_event(payload['user']['id'], id)
 
 
+@api.route('/<id>/leave')
+class EventLeave(Resource):
+    @api.doc('Leave event')
+    @jwt_required
+    def get(self, id):
+        """Leave event"""
+
+        jwt_auth_token = request.cookies.get('jwt_auth')
+        payload = jwt.decode(jwt_auth_token, key)
+
+        return user_leave_event(payload['user']['id'], id)
+
+
 @api.route('/user_created')
 class EventUserCreatedList(Resource):
     @api.doc('list_of_user_created_events')
@@ -91,7 +104,13 @@ class EventEntity(Resource):
     @api.marshal_with(_event_detailed)
     def get(self, id):
         """get an event given its identifier"""
-        event = get_an_event_detailed(id)
+
+
+        jwt_auth_token = request.cookies.get('jwt_auth')
+        payload = jwt.decode(jwt_auth_token, key)
+
+
+        event = get_an_event_detailed(id, payload['user']['id'])
         if not event:
             api.abort(404)
         else:

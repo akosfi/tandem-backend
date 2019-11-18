@@ -41,6 +41,7 @@ class EventDto:
         'details': fields.String(required=True),
         'cover_photo': fields.String(required=True),
         'people_going': fields.Integer(required=True),
+        'user_joined': fields.Boolean(required=True),
         'id': fields.Integer()
     })
 
