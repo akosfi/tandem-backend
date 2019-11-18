@@ -79,9 +79,6 @@ def user_leave_event(user_id, event_id):
             .query \
             .filter_by(id=user_id) \
             .first()
-    
-    print(event)
-    print(user)
 
     event.users.remove(user)
     db.session.commit() 
