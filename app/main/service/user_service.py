@@ -4,6 +4,8 @@ import json
 
 from flask import after_this_request
 
+from sqlalchemy.orm import aliased
+
 from app.main import db
 from app.main.model.user import User
 from app.main.model.language import Language
@@ -40,14 +42,22 @@ def get_all_users():
             .all()
 
 def get_recommended_users(id):
+    friendUser = aliased(User)
+    known_user_ids = db \
+                        .session \
+                        .query(User) \
+                        .filter(User.id == id) \
+                        .join((friendUser), User.friends) \
+                        .with_entities(friendUser.id)
+
     return User \
             .query \
             .filter(User.id != id) \
+            .filter(~User.id.in_(known_user_ids)) \
             .all()
 
 
 def get_known_users(id):
-
     return User \
             .query \
             .filter_by(id=id) \
