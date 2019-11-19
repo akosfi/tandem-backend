@@ -40,7 +40,7 @@ class MessageImage(Resource):
         if file is None: 
             return create_response_object(404, 'File not found.'), 404
         else:
-            return create_response_object(200, 'File uploaded succesfully.', unique_filename), 200
+            return create_response_object(200, 'File uploaded succesfully.', file), 200
 
 
 

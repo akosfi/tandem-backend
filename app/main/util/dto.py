@@ -3,11 +3,18 @@ from flask_restplus import Namespace, fields
 
 class UserDto:
     api = Namespace('user', description='user related operations')
-    user = api.model('user', {
+    
+    user_registration = api.model('user', {
         'email': fields.String(required=True, description='user email address'),
         'full_name': fields.String(required=True, description='user full name'),
         'password': fields.String(required=True, description='user password'),
+    })
+    
+    user = api.model('user', {
+        'email': fields.String(required=True, description='user email address'),
+        'full_name': fields.String(required=True, description='user full name'),
         'id': fields.String(description='user Identifier'),
+        'profile_pic_url': fields.String(description='user Identifier'),
         'registration_finished': fields.Boolean(description='user registration status'),
     })
 

@@ -23,3 +23,9 @@ user_goal_language = db.Table('user_goal_language',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('language_id', db.Integer, db.ForeignKey('language.id'), primary_key=True)
 ) 
+
+user_friendship = db.Table(
+    'friendships',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), index=True),
+    db.Column('friend_id', db.Integer, db.ForeignKey('user.id')),
+    db.UniqueConstraint('user_id', 'friend_id', name='unique_friendships'))

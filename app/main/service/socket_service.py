@@ -40,10 +40,11 @@ def remove_socket(id):
     db.session.commit()
 
 
-def get_active_users(): 
+def get_active_users(id): 
     return db \
             .session \
             .query(User) \
+            .filter(id != id) \
             .join(SocketUser, User.id == SocketUser.user_db_id) \
             .all()
   

@@ -46,6 +46,32 @@ def get_recommended_users(id):
             .all()
 
 
+def get_known_users(id):
+
+    return User \
+            .query \
+            .filter_by(id=id) \
+            .first() \
+            .friends
+
+
+def add_known_user(my_id, user_id):
+    user = db.session.query(User) \
+            .filter_by(id=my_id) \
+            .first()
+
+    user_to_add = db.session.query(User) \
+                    .filter_by(id=user_id) \
+                    .first()
+
+    user.befriend(user_to_add)
+
+    db.session.commit()
+
+    return create_response_object(200, "User added to known users")
+
+    
+
 
 def authenticate_user(data): 
     user = User \

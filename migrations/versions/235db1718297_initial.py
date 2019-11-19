@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: 5ba3774ece4e
+Revision ID: 235db1718297
 Revises: 
-Create Date: 2019-11-19 11:28:37.053387
+Create Date: 2019-11-19 17:39:38.871008
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5ba3774ece4e'
+revision = '235db1718297'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -70,6 +70,14 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
+    op.create_table('friendships',
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('friend_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['friend_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.UniqueConstraint('user_id', 'friend_id', name='unique_friendships')
+    )
+    op.create_index(op.f('ix_friendships_user_id'), 'friendships', ['user_id'], unique=False)
     op.create_table('message',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('sent_at', sa.DateTime(), nullable=False),
@@ -121,6 +129,8 @@ def downgrade():
     op.drop_table('user_known_language')
     op.drop_table('user_goal_language')
     op.drop_table('message')
+    op.drop_index(op.f('ix_friendships_user_id'), table_name='friendships')
+    op.drop_table('friendships')
     op.drop_table('event')
     op.drop_table('user')
     op.drop_table('topic')

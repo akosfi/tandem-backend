@@ -7,9 +7,7 @@ from ..config import key
 from .. import db, flask_bcrypt
 
 from ..model.event import user_joined_events
-from ._association_tables import user_goal_language, user_known_language, user_native_language
-
-#connection table TODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODOTODO
+from ._association_tables import user_goal_language, user_known_language, user_native_language, user_friendship
 
 class AuthType(str, Enum):
     PASSWORD: str = "PASSWORD"
@@ -29,10 +27,11 @@ class User(db.Model):
     registration_finished = db.Column(db.Boolean)
     auth_type = db.Column(db.Enum(AuthType))
     access_token = db.Column(db.String(255))
-
-
-    #messages = db.relationship('Message', backref='user', lazy=True)
-    #events = db.relationship('Event', backref='user', lazy=True)
+    
+    friends = db.relationship('User',
+                           secondary=user_friendship,
+                           primaryjoin=id==user_friendship.c.user_id,
+                           secondaryjoin=id==user_friendship.c.friend_id)
     
     events_joined = db.relationship('Event', secondary=user_joined_events, back_populates="users")
 
@@ -77,3 +76,14 @@ class User(db.Model):
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
+
+
+    def befriend(self, friend):
+        if friend not in self.friends:
+            self.friends.append(friend)
+            friend.friends.append(self)
+
+    def unfriend(self, friend):
+        if friend in self.friends:
+            self.friends.remove(friend)
+            friend.friends.remove(self)
