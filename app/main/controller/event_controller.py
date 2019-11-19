@@ -7,26 +7,24 @@ from werkzeug.utils import secure_filename
 from app.main.model.event import Event
 
 from ..util import create_response_object, jwt_required, upload_image, get_user_from_request
-from ..util.dto import EventDto
+from ..util.dto import EventDTO
 from ..service.event_service import set_event_cover_picture, save_new_event, user_leave_event, user_join_event, get_all_events, get_an_event_detailed, get_user_created_events, get_user_joined_events
 from ..config import key
 
-api = EventDto.api
-_event_detailed = EventDto.event_detailed
-_event = EventDto.event
+api = EventDTO.api
 
 
 @api.route('/')
 class EventList(Resource):
     @api.doc('list_of_events')
-    @api.marshal_list_with(_event, envelope='events')
+    @api.marshal_list_with(EventDTO.event, envelope='events')
     def get(self):
         """List all events"""
         return get_all_events()
 
     @api.response(201, 'Event successfully created.')
     @api.doc('create a new event')
-    @api.expect(_event, validate=True)
+    @api.expect(EventDTO.event_creation, validate=True)
     @jwt_required
     def post(self):
         """Creates a new Event """
@@ -78,7 +76,7 @@ class EventPicture(Resource):
 @api.route('/user_created')
 class EventUserCreatedList(Resource):
     @api.doc('list_of_user_created_events')
-    @api.marshal_list_with(_event, envelope='events')
+    @api.marshal_list_with(EventDTO.event, envelope='events')
     @jwt_required
     def get(self):
         """List all events"""
@@ -89,7 +87,7 @@ class EventUserCreatedList(Resource):
 @api.route('/user_joined')
 class EventUserJoinedList(Resource):
     @api.doc('list_of_user_joined_events')
-    @api.marshal_list_with(_event, envelope='events')
+    @api.marshal_list_with(EventDTO.event, envelope='events')
     @jwt_required
     def get(self):
         """List all events"""
@@ -104,7 +102,7 @@ class EventUserJoinedList(Resource):
 @api.response(404, 'Event not found.')
 class EventEntity(Resource):
     @api.doc('get an event')
-    @api.marshal_with(_event_detailed)
+    @api.marshal_with(EventDTO.event_detailed)
     def get(self, id):
         """get an event given its identifier"""
 

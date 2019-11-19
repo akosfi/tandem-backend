@@ -1,23 +1,26 @@
 import datetime
 
+from flask_restplus import marshal
 
 from app.main import db
 from app.main.model.event import Event
 from app.main.model.user import User
 from ..util import create_response_object
+from ..util.dto import EventDTO
+
 
 def save_new_event(data, creator_id): 
     new_event = Event(
         name=data['name'],
         public=data['public'],
         date=datetime.datetime.utcnow(),
-        cover_photo='asd', #TODOTODOTODO
         location=data['location'],
         details=data['details'],
-        creator_id=creator_id
+        creator_id=creator_id,
+        cover_photo='a'#?
     )
     save_changes(new_event)
-    return create_response_object(201, 'Successfully created.', new_event.toDTO()), 201
+    return create_response_object(201, 'Successfully created.', marshal(new_event, EventDTO.event)), 201
 
 
 def get_an_event_detailed(id, user_id): 
@@ -41,7 +44,8 @@ def get_an_event_detailed(id, user_id):
     else: 
         user_joined=False
     
-    event = event.toDTO()
+    event = marshal(event, EventDTO.event_detailed)
+
     event['people_going']=people_going
     event['user_joined']=user_joined
 

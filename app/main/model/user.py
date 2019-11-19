@@ -35,9 +35,9 @@ class User(db.Model):
     
     events_joined = db.relationship('Event', secondary=user_joined_events, back_populates="users")
 
-    user_native_languages = db.relationship('Language', secondary=user_native_language)
-    user_known_languages = db.relationship('Language', secondary=user_known_language)
-    user_goal_languages = db.relationship('Language', secondary=user_goal_language)
+    native_languages = db.relationship('Language', secondary=user_native_language)
+    known_languages = db.relationship('Language', secondary=user_known_language)
+    goal_languages = db.relationship('Language', secondary=user_goal_language)
 
     @property
     def password(self):

@@ -14,19 +14,7 @@ class Event(db.Model):
     location = db.Column(db.String(255), nullable=False)
     details = db.Column(db.String(1023), nullable=False)
     cover_photo = db.Column(db.String(255), nullable=False)
-
+    
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
     users = db.relationship('User', secondary=user_joined_events, back_populates="events_joined")
 
-
-    def toDTO(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            #'date': datetime.datetime.utcnow(), #!!!!!!!!!!!!!!!!!!
-            'public': self.public,
-            'location': self.location,
-            'details': self.details,
-            'cover_photo': self.cover_photo
-        }

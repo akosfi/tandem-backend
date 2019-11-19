@@ -1,7 +1,7 @@
 from flask_restplus import Namespace, fields
 
 
-class UserDto:
+class UserDTO:
     api = Namespace('user', description='user related operations')
     
     user_registration = api.model('user', {
@@ -19,7 +19,7 @@ class UserDto:
     })
 
 
-class MessageDto:
+class MessageDTO:
     api = Namespace('message', description='message related operations')
     message = api.model('message', {
         'sender_id': fields.Integer(required=True),
@@ -28,8 +28,16 @@ class MessageDto:
         'sent_at': fields.DateTime()
     })
 
-class EventDto:
+class EventDTO:
     api = Namespace('event', description='Event related operations.')
+
+    event_creation = api.model('event_creation', {
+        'name': fields.String(required=True),
+        'date': fields.DateTime(required=True),
+        'public': fields.Boolean(required=True),
+        'location': fields.String(required=True),
+        'details': fields.String(required=True),
+    })  
 
     event = api.model('event', {
         'name': fields.String(required=True),
@@ -37,6 +45,7 @@ class EventDto:
         'public': fields.Boolean(required=True),
         'location': fields.String(required=True),
         'details': fields.String(required=True),
+        'cover_photo': fields.String(required=True),
         'id': fields.Integer()
     })  
 
@@ -52,7 +61,7 @@ class EventDto:
         'id': fields.Integer()
     })
 
-class StaticDto:
+class StaticDTO:
     api = Namespace('static', description='static lists')
     
     language = api.model('language', {

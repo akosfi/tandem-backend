@@ -9,14 +9,11 @@ from werkzeug.utils import secure_filename
 from app.main.model.message import Message
 
 from ..util import jwt_required, create_response_object, upload_image, get_user_from_request
-from ..util.dto import MessageDto
+from ..util.dto import MessageDTO
 from ..config import key, basedir
 from ..service.message_service import get_messages_of_user
 
-api = MessageDto.api
-_message = MessageDto.message
-
-
+api = MessageDTO.api
 
 
 @api.route('/')

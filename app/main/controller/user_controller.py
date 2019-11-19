@@ -10,28 +10,25 @@ from functools import wraps
 from app.main.model.user import User, AuthType
 
 from ..util import create_response_object, jwt_required, upload_image, get_user_from_request
-from ..util.dto import UserDto
+from ..util.dto import UserDTO
 from ..service.user_service import add_known_user, save_new_user, get_known_users, set_user_preferences, set_user_profile_picture, get_all_users, get_recommended_users, get_a_user, authenticate_user, authenticate_thirdparty_user ,set_user_cookies
 from ..service.socket_service import get_active_users
 from ..config import key
 
-api = UserDto.api
-_user = UserDto.user
-_user_registration = UserDto.user_registration 
-
+api = UserDTO.api
 
 
 @api.route('/')
 class UserList(Resource):
     @api.doc('list_of_registered_users')
-    @api.marshal_list_with(_user, envelope='data')
+    @api.marshal_list_with(UserDTO.user, envelope='data')
     def get(self):
         """List all registered users"""
         return get_all_users()
 
     @api.response(201, 'User successfully created.')
     @api.doc('create a new user')
-    @api.expect(_user_registration, validate=True)
+    @api.expect(UserDTO.user_registration, validate=True)
     def post(self):
         """Creates a new User """
         data = request.json
@@ -51,7 +48,7 @@ class UserMe(Resource):
 @api.route('/active')
 class UsersActive(Resource):
     
-    @api.marshal_list_with(_user, envelope='users')
+    @api.marshal_list_with(UserDTO.user, envelope='users')
     @jwt_required
     def get(self):
         user = get_user_from_request(request)
@@ -62,7 +59,7 @@ class UsersActive(Resource):
 @api.route('/recommended')
 class UsersRecommended(Resource):
 
-    @api.marshal_list_with(_user, envelope='users')
+    @api.marshal_list_with(UserDTO.user, envelope='users')
     @jwt_required
     def get(self):
         user = get_user_from_request(request)
@@ -73,7 +70,7 @@ class UsersRecommended(Resource):
 @api.route('/known')
 class UsersKnown(Resource):
 
-    @api.marshal_list_with(_user, envelope='users')
+    @api.marshal_list_with(UserDTO.user, envelope='users')
     @jwt_required
     def get(self):
         user = get_user_from_request(request)
@@ -173,7 +170,7 @@ class UserPicture(Resource):
 @api.response(404, 'User not found.')
 class UserEntity(Resource):
     @api.doc('get a user')
-    @api.marshal_with(_user)
+    @api.marshal_with(UserDTO.user)
     def get(self, id):
         """get a user given its identifier"""
         user = get_a_user(id)
