@@ -99,3 +99,14 @@ def user_leave_event(user_id, event_id):
 def save_changes(data):
     db.session.add(data)
     db.session.commit()
+
+def set_event_cover_picture(id, picture):
+    event = db.session.query(Event) \
+            .filter_by(id=id) \
+            .first()
+
+    event.cover_photo = picture
+
+    db.session.commit()
+
+    return picture

@@ -6,9 +6,9 @@ from werkzeug.utils import secure_filename
 
 from app.main.model.event import Event
 
-from ..util import create_response_object, jwt_required, get_unique_filename, allowed_file
+from ..util import create_response_object, jwt_required, upload_image
 from ..util.dto import EventDto
-from ..service.event_service import save_new_event, user_leave_event, user_join_event, get_all_events, get_an_event_detailed, get_user_created_events, get_user_joined_events
+from ..service.event_service import set_event_cover_picture, save_new_event, user_leave_event, user_join_event, get_all_events, get_an_event_detailed, get_user_created_events, get_user_joined_events
 from ..config import key
 
 api = EventDto.api
@@ -35,11 +35,6 @@ class EventList(Resource):
         payload = jwt.decode(jwt_auth_token, key)
 
         data = request.json
-
-        #file = request.files['cover_photo']
-        #print("AAAAAAAAAAAAAAAA")
-        #print(file.filename)
-
         return save_new_event(data, payload['user']['id'])
 
 
@@ -68,6 +63,22 @@ class EventLeave(Resource):
         payload = jwt.decode(jwt_auth_token, key)
 
         return user_leave_event(payload['user']['id'], id)
+
+@api.route('/<id>/picture/')
+class EventPicture(Resource):
+
+    @jwt_required
+    def post(self, id):
+        data = request.json
+        
+        jwt_auth_token = request.cookies.get('jwt_auth')
+        payload = jwt.decode(jwt_auth_token, key)
+
+        event_picture = upload_image(request)
+
+        set_event_cover_picture(id, event_picture)
+
+        return create_response_object(200, 'Image uploaded succesfully.', event_picture), 200
 
 
 @api.route('/user_created')
