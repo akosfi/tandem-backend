@@ -39,6 +39,13 @@ def get_all_users():
             .query \
             .all()
 
+def get_recommended_users(id):
+    return User \
+            .query \
+            .filter(User.id != id) \
+            .all()
+
+
 
 def authenticate_user(data): 
     user = User \
