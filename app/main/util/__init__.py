@@ -18,6 +18,12 @@ def create_response_object(status, message, data = None):
     return mock
 
 
+def get_user_from_request(request):
+    jwt_auth_token = request.cookies.get('jwt_auth')
+    payload = jwt.decode(jwt_auth_token, key)
+
+    return payload['user']
+
 
 def jwt_required(f):
     @wraps(f)

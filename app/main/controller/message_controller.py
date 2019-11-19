@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 from app.main.model.message import Message
 
-from ..util import jwt_required, create_response_object, upload_image
+from ..util import jwt_required, create_response_object, upload_image, get_user_from_request
 from ..util.dto import MessageDto
 from ..config import key, basedir
 from ..service.message_service import get_messages_of_user
@@ -24,10 +24,9 @@ class MessageList(Resource):
 
     @jwt_required
     def get(self):
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
           
-        return get_messages_of_user(payload['user']['id'])
+        return get_messages_of_user(user['id'])
 
 
 @api.route('/image')

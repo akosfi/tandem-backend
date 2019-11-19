@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 
 from app.main.model.event import Event
 
-from ..util import create_response_object, jwt_required, upload_image
+from ..util import create_response_object, jwt_required, upload_image, get_user_from_request
 from ..util.dto import EventDto
 from ..service.event_service import set_event_cover_picture, save_new_event, user_leave_event, user_join_event, get_all_events, get_an_event_detailed, get_user_created_events, get_user_joined_events
 from ..config import key
@@ -31,11 +31,10 @@ class EventList(Resource):
     def post(self):
         """Creates a new Event """
 
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
 
         data = request.json
-        return save_new_event(data, payload['user']['id'])
+        return save_new_event(data, user['id'])
 
 
 
@@ -46,10 +45,9 @@ class EventJoin(Resource):
     def get(self, id):
         """Join event"""
 
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
 
-        return user_join_event(payload['user']['id'], id)
+        return user_join_event(user['id'], id)
 
 
 @api.route('/<id>/leave')
@@ -59,10 +57,9 @@ class EventLeave(Resource):
     def get(self, id):
         """Leave event"""
 
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
 
-        return user_leave_event(payload['user']['id'], id)
+        return user_leave_event(user['id'], id)
 
 @api.route('/<id>/picture/')
 class EventPicture(Resource):
@@ -70,9 +67,6 @@ class EventPicture(Resource):
     @jwt_required
     def post(self, id):
         data = request.json
-        
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
 
         event_picture = upload_image(request)
 
@@ -88,10 +82,9 @@ class EventUserCreatedList(Resource):
     @jwt_required
     def get(self):
         """List all events"""
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
           
-        return get_user_created_events(payload['user']['id'])
+        return get_user_created_events(user['id'])
 
 @api.route('/user_joined')
 class EventUserJoinedList(Resource):
@@ -100,10 +93,9 @@ class EventUserJoinedList(Resource):
     @jwt_required
     def get(self):
         """List all events"""
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
           
-        return get_user_joined_events(payload['user']['id'])
+        return get_user_joined_events(user['id'])
 
 
 
@@ -116,12 +108,9 @@ class EventEntity(Resource):
     def get(self, id):
         """get an event given its identifier"""
 
+        user = get_user_from_request(request)
 
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
-
-
-        event = get_an_event_detailed(id, payload['user']['id'])
+        event = get_an_event_detailed(id, user['id'])
         if not event:
             api.abort(404)
         else:

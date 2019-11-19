@@ -9,7 +9,7 @@ from functools import wraps
 
 from app.main.model.user import User, AuthType
 
-from ..util import create_response_object, jwt_required, upload_image
+from ..util import create_response_object, jwt_required, upload_image, get_user_from_request
 from ..util.dto import UserDto
 from ..service.user_service import add_known_user, save_new_user, get_known_users, set_user_preferences, set_user_profile_picture, get_all_users, get_recommended_users, get_a_user, authenticate_user, authenticate_thirdparty_user ,set_user_cookies
 from ..service.socket_service import get_active_users
@@ -54,10 +54,9 @@ class UsersActive(Resource):
     @api.marshal_list_with(_user, envelope='users')
     @jwt_required
     def get(self):
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
 
-        return get_active_users(payload['user']['id']), 200
+        return get_active_users(user['id']), 200
 
 
 @api.route('/recommended')
@@ -66,10 +65,9 @@ class UsersRecommended(Resource):
     @api.marshal_list_with(_user, envelope='users')
     @jwt_required
     def get(self):
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
 
-        return get_recommended_users(payload['user']['id']), 200
+        return get_recommended_users(user['id']), 200
 
 
 @api.route('/known')
@@ -78,21 +76,18 @@ class UsersKnown(Resource):
     @api.marshal_list_with(_user, envelope='users')
     @jwt_required
     def get(self):
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
 
-
-        return get_known_users(payload['user']['id']), 200
+        return get_known_users(user['id']), 200
 
 @api.route('/<id>/add')
 class UsersAddToKnown(Resource):
 
     @jwt_required
     def get(self, id):
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
 
-        return add_known_user(payload['user']['id'], id), 200
+        return add_known_user(user['id'], id), 200
 
 
 @api.route('/login')
@@ -151,10 +146,9 @@ class UserPreferences(Resource):
     def post(self):
         data = request.json
         
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
 
-        return set_user_preferences(payload['user']['id'], data)
+        return set_user_preferences(user['id'], data)
 
 
 
@@ -165,12 +159,11 @@ class UserPicture(Resource):
     def post(self):
         data = request.json
         
-        jwt_auth_token = request.cookies.get('jwt_auth')
-        payload = jwt.decode(jwt_auth_token, key)
+        user = get_user_from_request(request)
 
         profile_picture = upload_image(request)
 
-        set_user_profile_picture(payload['user']['id'], profile_picture)
+        set_user_profile_picture(user['id'], profile_picture)
 
         return create_response_object(200, 'Image uploaded succesfully.', profile_picture), 200
 
