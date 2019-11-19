@@ -9,9 +9,9 @@ from functools import wraps
 
 from app.main.model.user import User, AuthType
 
-from ..util import create_response_object, jwt_required
+from ..util import create_response_object, jwt_required, upload_image
 from ..util.dto import UserDto
-from ..service.user_service import save_new_user, set_user_preferences, get_all_users, get_a_user, authenticate_user, authenticate_thirdparty_user ,set_user_cookies
+from ..service.user_service import save_new_user, set_user_preferences, set_user_profile_picture, get_all_users, get_a_user, authenticate_user, authenticate_thirdparty_user ,set_user_cookies
 from ..service.socket_service import get_active_users
 from ..config import key
 
@@ -116,6 +116,24 @@ class UserPreferences(Resource):
         payload = jwt.decode(jwt_auth_token, key)
 
         return set_user_preferences(payload['user']['id'], data)
+
+
+
+@api.route('/picture')
+class UserPicture(Resource):
+
+    @jwt_required
+    def post(self):
+        data = request.json
+        
+        jwt_auth_token = request.cookies.get('jwt_auth')
+        payload = jwt.decode(jwt_auth_token, key)
+
+        profile_picture = upload_image(request)
+
+        set_user_profile_picture(payload['user']['id'], profile_picture)
+
+        return create_response_object(200, 'Image uploaded succesfully.', profile_picture), 200
 
 
 @api.route('/<id>')

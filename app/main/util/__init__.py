@@ -1,10 +1,12 @@
 import jwt
 import uuid
+import os
 
 from flask import request
 from functools import wraps 
+from werkzeug.utils import secure_filename
 
-from ..config import key
+from ..config import key, basedir
 
 
 def create_response_object(status, message, data = None): 
@@ -50,3 +52,17 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+
+def upload_image(request): 
+    if 'file' not in request.files:
+        return None
+    file = request.files['file']
+    if file.filename == '':
+        return None
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        unique_filename = get_unique_filename(filename)
+        file.save(os.path.join(basedir, 'public/img', unique_filename))
+        return unique_filename

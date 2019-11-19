@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 from app.main.model.message import Message
 
-from ..util import jwt_required, create_response_object, get_unique_filename, allowed_file
+from ..util import jwt_required, create_response_object, upload_image
 from ..util.dto import MessageDto
 from ..config import key, basedir
 from ..service.message_service import get_messages_of_user
@@ -35,18 +35,12 @@ class MessageImage(Resource):
 
     @jwt_required
     def post(self):
-        if 'file' not in request.files:
+        file = upload_image(request)
+
+        if file is None: 
             return create_response_object(404, 'File not found.'), 404
-        file = request.files['file']
-        if file.filename == '':
-            return create_response_object(404, 'File not found.'), 404
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            unique_filename = get_unique_filename(filename)
-            file.save(os.path.join(basedir, 'public/img', unique_filename))
+        else:
             return create_response_object(200, 'File uploaded succesfully.', unique_filename), 200
-
-
 
 
 

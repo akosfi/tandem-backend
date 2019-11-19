@@ -26,8 +26,10 @@ def save_new_user(data):
             registration_finished=False
         )
         save_changes(new_user)
-        set_user_cookies(new_user)
-        return create_response_object(201, 'Successfully registered.'), 201
+        
+        jwt_user = set_user_cookies(new_user)
+        
+        return create_response_object(201, 'Successfully registered.', jwt_user), 201
     else:
         return create_response_object(409, 'User already exists. Please Log in.'), 409
 
@@ -110,8 +112,7 @@ def set_user_cookies(user):
 
 
 def set_user_preferences(id, data): 
-    user = User \
-            .query \
+    user = db.session.query(User) \
             .filter_by(id=id) \
             .first()
 
@@ -133,5 +134,19 @@ def set_user_preferences(id, data):
 
     jwt_user = set_user_cookies(user)
     return jwt_user, 200
+
+
+def set_user_profile_picture(id, picture): 
+    user = db.session.query(User) \
+            .filter_by(id=id) \
+            .first()
+
+    user.profile_pic_url = picture
+
+    db.session.commit()
+
+    set_user_cookies(user)
+
+    return picture
 
     
