@@ -2,5 +2,4 @@ __pycache__/
 *.py[cod]
 .idea/
 .vscode/
-/app/main/public
-/app/main/static
+/app/main/public/img
