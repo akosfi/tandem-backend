@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from flask_restplus import marshal
 
@@ -13,7 +13,7 @@ def save_new_event(data, creator_id):
     new_event = Event(
         name=data['name'],
         public=data['public'],
-        date=datetime.datetime.utcnow(),
+        date=datetime.strptime(data['date'], '%Y-%m-%dT%H:%M:%S.%fZ'),
         location=data['location'],
         details=data['details'],
         creator_id=creator_id,
