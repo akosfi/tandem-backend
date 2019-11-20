@@ -50,6 +50,10 @@ def get_recommended_users(id):
                         .join((friendUser), User.friends) \
                         .with_entities(friendUser.id)
 
+    #get user id-s of users who speaks fluently what the USER wants to learn
+    #get user id-s of users who speaks natively what the USER wants to learn
+    #get user id-s of users who wants to speak what the USER speaks natively or fluently
+
     return User \
             .query \
             .filter(User.id != id) \
