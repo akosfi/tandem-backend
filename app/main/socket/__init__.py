@@ -18,8 +18,7 @@ def create_socket_app(app):
 
 
     @socketio.on('disconnect')
-    def disconnect(): 
-        #print(f'DISCONNECT {request.sid}')
+    def disconnect():
         leave_room(room=request.sid, sid=request.sid)
         close_room(room=request.sid)
 

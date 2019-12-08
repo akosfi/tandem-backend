@@ -42,22 +42,66 @@ def get_all_users():
             .all()
 
 def get_recommended_users(id):
-    friendUser = aliased(User)
+    friend_user = aliased(User)
     known_user_ids = db \
                         .session \
                         .query(User) \
                         .filter(User.id == id) \
-                        .join((friendUser), User.friends) \
-                        .with_entities(friendUser.id)
+                        .join(friend_user, User.friends) \
+                        .with_entities(friend_user.id)
 
-    #get user id-s of users who speaks fluently what the USER wants to learn
-    #get user id-s of users who speaks natively what the USER wants to learn
-    #get user id-s of users who wants to speak what the USER speaks natively or fluently
+    user_native_languages = db \
+                        .session \
+                        .query(User) \
+                        .filter(User.id == id) \
+                        .join(Language, User.native_languages) \
+                        .with_entities(Language.id)
+
+    user_known_languages = db \
+                        .session \
+                        .query(User) \
+                        .filter(User.id == id) \
+                        .join(Language, User.known_languages) \
+                        .with_entities(Language.id)
+
+    user_goal_languages = db \
+                        .session \
+                        .query(User) \
+                        .filter(User.id == id) \
+                        .join(Language, User.goal_languages) \
+                        .with_entities(Language.id)
+
+
+
+    users_who_natively_speak_user_goal = db \
+                        .session \
+                        .query(User) \
+                        .filter(User.id != id) \
+                        .join(Language, User.native_languages) \
+                        .filter(Language.id.in_(user_goal_languages)) \
+                        .with_entities(User.id)
+
+    users_who_fluently_speak_user_goal = db \
+                        .session \
+                        .query(User) \
+                        .filter(User.id != id) \
+                        .join(Language, User.known_languages) \
+                        .filter(Language.id.in_(user_goal_languages)) \
+                        .with_entities(User.id)
+
+    users_whose_goal_language_spoken_by_user = db \
+                        .session \
+                        .query(User) \
+                        .filter(User.id != id) \
+                        .join(Language, User.goal_languages) \
+                        .filter(Language.id.in_((user_native_languages, user_known_languages))) \
+                        .with_entities(User.id)
 
     return User \
             .query \
             .filter(User.id != id) \
             .filter(~User.id.in_(known_user_ids)) \
+            .filter(User.id.in_((users_who_natively_speak_user_goal,users_who_fluently_speak_user_goal,users_whose_goal_language_spoken_by_user))) \
             .all()
 
 
@@ -165,15 +209,15 @@ def set_user_preferences(id, data):
 
     for language in data['nativeLanguages']:
         language = Language.query.filter_by(id=language['id']).first()
-        user.user_native_languages.append(language)
+        user.native_languages.append(language)
 
     for language in data['fluentLanguages']:
         language = Language.query.filter_by(id=language['id']).first()
-        user.user_known_languages.append(language)
+        user.known_languages.append(language)
 
     for language in data['goalLanguages']:
         language = Language.query.filter_by(id=language['id']).first()
-        user.user_goal_languages.append(language)
+        user.goal_languages.append(language)
 
     
     user.registration_finished = True
